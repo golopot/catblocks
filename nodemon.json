@@ -1,0 +1,5 @@
+{
+  "exec" : "gulp; http-server",
+  "ignore" : "dist",
+  "ext": "js html svg obj png jpg"
+}

@@ -1,0 +1,5 @@
+node_modules
+catblocks
+dist
+*.mtl
+three.js

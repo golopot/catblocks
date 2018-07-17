@@ -1,5 +1,6 @@
 node_modules
-catblocks
 dist
+dist-prod
 *.mtl
-three.js
+*.blend1
+yarn-error.log

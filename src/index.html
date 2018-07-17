@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <title>Micha 貓跳台</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="shortcut icon" type="image/png" href="data:image/x-icon;base64,
+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
+R5YJAAAAAElFTkSuQmCC
+"/>
+  <style>
+  body {
+    font-family: Monospace;
+    /*background-color: #f0f0f0;*/
+    margin: 0px;
+    overflow: hidden;
+  }
+
+  a {
+    color: grey;
+    text-decoration: none;
+  }
+
+  #webgl-unsupported {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgb(229,0,0);
+  }
+  
+  #webgl-unsupported > div {
+    margin: auto;
+    max-width: 600px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  #webgl-unsupported > div > div {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    font-size: 20px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px 10px;
+  }
+
+  #company-logo {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 1;
+  }
+
+  #header-bar, #header-bar-goback{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .control-group {
+    display: flex;
+    justify-content: center;
+  }
+
+  .controlbutton {
+    box-sizing: border-box;
+    width: 50px;
+    height: 50px;
+    margin: 5px 5px 0px 5px;
+    padding: 13px 0px 0px 13px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 60% ;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+  }
+  .controlbutton:hover {
+    background-color: rgba(0,0,0,0.4);
+  }
+  .controlbutton img {
+    pointer-events: none;
+    width: 24px;
+  }
+  .controlbutton.flagged {
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  .overlay-bg {
+    position: absolute;
+    background: rgba(0,0,0,0.2);
+    width: 100%;
+    height: 100%;
+  }
+
+  #modal-info, #modal-checkmark {
+    box-sizing: border-box;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 350px;
+    height: 500px;
+    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 5px;
+    text-align: center;
+  }
+
+  #footer {
+    height: 50px;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+  }
+
+  #snapshot {
+    display: inline-block;
+    padding: 12px 30px 12px 30px;
+    box-sizing: border-box;
+    border: 1px solid;
+    border-radius: 3px;
+    margin: auto;
+    position: relative;
+    left: 0;
+
+    text-align: center;
+    width: 100%;
+
+    cursor: pointer;
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+
+
+  #snapshot:hover {
+    background: rgba(0,0,0,0.2);
+  }
+
+  #summary {
+    box-sizing: border-box;
+    text-align: initial;
+    padding-left: 10px;
+    line-height: 1.6;
+    font-size:  16px;
+  }
+
+  #modal-info div {
+    box-sizing: border-box;
+    text-align: initial;
+    padding-left: 10px;
+    line-height: 1.6;
+    font-size:  16px;
+  }
+
+
+  @media (max-width: 500px) {
+    body{
+    background: red;
+    }
+
+    #modal-info, #modal-checkmark {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  </style>
+  </head>
+
+  <body>
+  <section id="webgl-unsupported" style="visibility: hidden;">
+    <div>
+      <div>
+      Micha 貓跳台<br>
+      你的裝置不支援 WebGl 3d 繪圖技術。請試試看<br>
+      1. 使用 電腦 瀏覽<br>
+      2. 使用 Chrome 瀏覽器<br>
+      3. 使用 Edge 瀏覽器<br>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="header-bar">
+    <div class="control-group">
+
+      <div class= "controlbutton" id="button-info" style="display: none;">
+        <img src="assets/info.svg" width="35" alt="info">
+      </div>
+
+      <div class= "controlbutton" id="button-checkmark">
+        <img src="assets/checkmark.svg" width="35" alt="complete">
+        <!-- <img src="assets/warn.svg" width= "35px"> -->
+      </div>
+
+      <div class= "controlbutton" id="button-delete" style="display: none;">
+        <img src="assets/delete.svg" alt="delete">
+      </div>
+
+      <div class= "controlbutton" id="button-rotate-clockwise" style="display: none;">
+        <img src="assets/rotate-clockwise.svg" width="35" alt="rotate-clockwise">
+      </div>
+
+      <div class= "controlbutton" id="button-rotate-anticlock" style="display: none;">
+        <img src="assets/rotate-anticlock.svg" width="35" alt="rotate-anticlockwise">
+      </div>
+
+    </div>
+  </section>
+
+
+  <section id="header-bar-goback" style="visibility: hidden">
+    <div class="control-group">
+      <div class= "controlbutton" id="button-goback">
+        <img src="assets/goback.svg" alt="goback">
+      </div>
+    </div>
+  </section>
+
+  <section class="overlay-bg" style="visibility: hidden">
+  </section>
+
+  <section id="modal-info" style="visibility: hidden">
+    <div>
+    </div>
+  </section>
+
+
+  <section id="modal-checkmark" style="visibility: hidden">
+    <div id="snapshot">拍照</div>
+    <p id="summary"></p>
+    <div id="safety-warn" style="font-size: 16px; color: red; display: none">
+    組裝出現高低差，請使用圓柱組件或平台，補足兩端高度落差！
+    </div>
+  </section>
+
+  <section id="footer" style="visibility: hidden" >
+    <a href="http://www.lovemicha.com.tw/" target="_blank" style=" display: flex; margin: 0px 10px">
+      <img height="45" style="position: relative; top: 8px;" src="assets/micha-logo.png" alt="Micha-logo">
+      <div style=" position: relative; top: 30px; left: 5px;">
+      http://www.lovemicha.com.tw/
+      </div>
+    </a>
+  </section>
+
+  <div id="three-container"></div>
+  <script src="./main.bundle.js"></script>
+  </body>
+</html>

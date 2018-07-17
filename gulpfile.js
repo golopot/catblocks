@@ -1,33 +1,21 @@
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var sourcemaps = require('gulp-sourcemaps');
-var files = require('./loads.js')
-var changed  = require( 'gulp-changed')
+const gulp = require('gulp')
+const merge = require('merge-stream')
+const zip = require('gulp-zip')
 
-gulp.task('concat', function() {
-  return gulp.src( files )
-    .pipe(sourcemaps.init())
-      .pipe(concat('all.js'))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./dist'))
-});
+gulp.task('assets', () => merge(
+  gulp.src(['src/assets/*.svg', 'src/assets/*.png'])
+    .pipe(gulp.dest('./dist/assets')),
+  gulp.src(['src/assets/*.jpg', 'src/assets/*.obj'])
+    .pipe(zip('assets.zip'))
+    .pipe(gulp.dest('./dist/assets'))
+))
 
-gulp.task('copy-assets', function(){
-	return gulp.src( ['src/assets/*'] )
-		.pipe(gulp.dest('./dist/assets'))
+gulp.task('html', () => gulp.src('src/*.html')
+  .pipe(gulp.dest('./dist')))
+
+
+gulp.task('default', ['assets', 'html'])
+
+gulp.task('watch', ['assets', 'html'], () => {
+  gulp.watch('./src/**/*', ['assets', 'html'])
 })
-
-gulp.task('copy-html', function(){
-	return gulp.src( 'src/*.html' )
-		.pipe(gulp.dest('./dist'))
-})
-
-gulp.task('copy-lib', function(){
-	return gulp.src( 'lib/*' )
-		.pipe( changed('./dist') )
-		.pipe( gulp.dest('./dist') )
-})
-
-
-gulp.task('default', ['concat', 'copy-assets', 'copy-html', 'copy-lib'] )
-

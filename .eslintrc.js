@@ -3,8 +3,7 @@ module.exports = {
   parserOptions: {
     ecmaFeatures: {
       ecmaVersion: 2018,
-      experimentalObjectRestSpread: true,
-    }
+    },
   },
   env: {
     browser: true,
@@ -23,6 +22,8 @@ module.exports = {
     'space-before-blocks': [2, 'always'],
     'keyword-spacing': 2,
     'no-console': 0,
+    'no-param-reassign': 0,
+    'no-continue': 0,
     'no-unused-expressions': 0,
     'no-use-before-define': 0,
     'no-underscore-dangle': 0,

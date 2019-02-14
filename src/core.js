@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { models } from './models'
 
 const pv4 = v => `x: ${v.x.toFixed(2)} y: ${v.y.toFixed(2)} z: ${v.z.toFixed(2)}`
+window.pv4 = pv4
 
 const dummyVector = new THREE.Vector3()
 const getHeight = x => x.getWorldPosition(dummyVector).y
@@ -263,7 +264,6 @@ function handleDrop(world) {
 
 const do_safety_check = (world) => {
   const { blocks } = world
-  const disks = blocks.filter(x => x.name === 'disk')
 
   const lps = blocks.map(x => x.$lockPoints).reduce((a, b) => a.concat(b), [])
 

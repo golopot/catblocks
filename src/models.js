@@ -2,7 +2,7 @@ import { OBJLoader } from 'three/examples/js/loaders/OBJLoader'
 
 import * as THREE from 'three'
 import JSZip from 'jszip'
-import BufferGeometryUtils from './BufferGeometryUtils'
+import BufferGeometryUtils from './vendor/BufferGeometryUtils'
 
 const createLockpoints = points => points.map((a) => {
   const geometry = new THREE.IcosahedronGeometry(1.0)

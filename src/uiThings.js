@@ -32,7 +32,7 @@ const showUnsupported = () => {
 
 const do_updateSummary = () => {
   const sum = document.querySelector('#summary')
-  const count = blocks.reduce((a, x) => {
+  const count = window.blocks.reduce((a, x) => {
     if (a[x.name]) a[x.name] += 1
     else a[x.name] = 1
     return a
@@ -71,8 +71,9 @@ const do_updateSummary = () => {
 
 
   let text = ''
-  for (const key in count) text += `${dict[key] || key} : ${count[key]}<br>`
-
+  for (const key of Object.keys(count)) {
+    text += `${dict[key] || key} : ${count[key]}<br>`
+  }
   sum.innerHTML = text
 }
 

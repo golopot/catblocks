@@ -300,10 +300,10 @@ const do_safety_check = (world) => {
 
   const _do_safety_check_report = (_gaps) => {
     if (_gaps.length === 0) {
-      document.querySelector('#button-checkmark img').src = 'assets/checkmark.svg'
+      document.querySelector('#button-checkmark img').src = 'images/checkmark.svg'
       document.querySelector('#safety-warn').style.display = 'none'
     } else {
-      document.querySelector('#button-checkmark img').src = 'assets/warn.svg'
+      document.querySelector('#button-checkmark img').src = 'images/warn.svg'
       document.querySelector('#safety-warn').style.display = ''
     }
   }

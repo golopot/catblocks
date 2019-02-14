@@ -3,9 +3,11 @@ const merge = require('merge-stream')
 const zip = require('gulp-zip')
 
 gulp.task('assets', () => merge(
-  gulp.src(['src/assets/*.svg', 'src/assets/*.png'])
-    .pipe(gulp.dest('./dist/assets')),
-  gulp.src(['src/assets/*.jpg', 'src/assets/*.obj'])
+  gulp
+    .src(['src/images/*'])
+    .pipe(gulp.dest('./dist/images')),
+  gulp
+    .src(['src/assets/*.jpg', 'src/assets/*.obj'])
     .pipe(zip('assets.zip'))
     .pipe(gulp.dest('./dist/assets'))
 ))

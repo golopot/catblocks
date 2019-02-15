@@ -55,7 +55,7 @@ export default function initCanvasListeners(container, world) {
 
   function onMouseUp(event) {
     if (event.button === 0) {
-      if (world.drag_obj) world.handleDrop()
+      if (world.dragObj) world.handleDrop()
     }
   }
 
@@ -90,7 +90,7 @@ export default function initCanvasListeners(container, world) {
   }
 
   function onTouchEnd() {
-    if (world.drag_obj) world.handleDrop()
+    if (world.dragObj) world.handleDrop()
   }
 
   function recordTouchXY(event) {

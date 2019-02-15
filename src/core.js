@@ -81,33 +81,33 @@ const handleDragStart = (world) => {
     mouse, camera, plane, raycaster, scene2, blocks,
   } = world
 
-  const drag_obj = world.getIntersected()
+  const dragObj = world.getIntersected()
 
-  if (drag_obj === null) return
+  if (dragObj === null) return
 
-  world.drag_obj = drag_obj
-  world.activeObj = drag_obj
+  world.dragObj = dragObj
+  world.activeObj = dragObj
 
 
   raycaster.setFromCamera(mouse, camera)
   world.dragPointStart = raycaster.ray.intersectPlane(plane, new THREE.Vector3())
 
-  world.dragObjPositionStart = drag_obj.getWorldPosition(new THREE.Vector3())
+  world.dragObjPositionStart = dragObj.getWorldPosition(new THREE.Vector3())
 
   // if in showcase
-  if (drag_obj.parent.name === 'showcase_spot') {
-    const mesh = models.get(drag_obj.name).createBlock()
-    const spot = drag_obj.parent
+  if (dragObj.parent.name === 'showcase_spot') {
+    const mesh = models.get(dragObj.name).createBlock()
+    const spot = dragObj.parent
     spot.add(mesh)
-    blocks.push(drag_obj)
+    blocks.push(dragObj)
   } else {
-    utils.detach(drag_obj)
+    utils.detach(dragObj)
   }
 
   world.updateActiveObjColor()
 
-  // add drag_obj to the top layer
-  scene2.add(drag_obj)
+  // add dragObj to the top layer
+  scene2.add(dragObj)
 }
 
 const updateActiveObjColor = (world) => {
@@ -125,7 +125,7 @@ const updateActiveObjColor = (world) => {
 }
 
 const handleDragging = (world) => {
-  if (!world.drag_obj) {
+  if (!world.dragObj) {
     return
   }
 
@@ -133,7 +133,7 @@ const handleDragging = (world) => {
     mouse,
     camera,
     raycaster,
-    drag_obj,
+    dragObj,
     dragPointStart,
     dragObjPositionStart,
     plane,
@@ -143,31 +143,31 @@ const handleDragging = (world) => {
 
   const dragPoint = raycaster.ray.intersectPlane(plane, new THREE.Vector3())
 
-  const intersects = raycaster.intersectObject(drag_obj)
+  const intersects = raycaster.intersectObject(dragObj)
   const perspectiveRatio = camera.type !== 'PerspectiveCamera'
     ? 1
     : intersects.length > 0
       ? 1 - intersects[0].point.y / camera.position.y
-      : 1 - drag_obj.position.y / camera.position.y
+      : 1 - dragObj.position.y / camera.position.y
 
-  drag_obj.position
+  dragObj.position
     .copy(dragPoint.sub(dragPointStart))
     .multiplyScalar(perspectiveRatio)
     .add(dragObjPositionStart)
 }
 
 const handleLockPoints = (world) => {
-  const { drag_obj, blocks } = world
-  if (!drag_obj) {
+  const { dragObj, blocks } = world
+  if (!dragObj) {
     return
   }
   const lockPoints = blocks
-    .filter(x => x !== drag_obj)
+    .filter(x => x !== dragObj)
     .map(x => x.$lockPoints)
     .reduce((a, b) => a.concat(b), [])
     .filter(x => x.$direction === 'up')
 
-  for (const a of drag_obj.$lockPoints) {
+  for (const a of dragObj.$lockPoints) {
     if (a.$direction !== 'down') continue
 
     a.$preparedToLock = lockPoints
@@ -199,27 +199,27 @@ const handleLockPoints = (world) => {
 
 function handleDrop(world) {
   console.log('dropped')
-  const { drag_obj, scene } = world
+  const { dragObj, scene } = world
 
   world.dragPointStart = null
   // disable on top
-  scene.add(drag_obj)
-  drag_obj.position.y = 0
+  scene.add(dragObj)
+  dragObj.position.y = 0
 
   // make this plate align to the grid
-  if (drag_obj.name === 'plate5x5') {
-    drag_obj.position.x = Math.floor(drag_obj.position.x / 10) * 10 + 5
-    drag_obj.position.z = Math.floor(drag_obj.position.z / 10) * 10 + 5
+  if (dragObj.name === 'plate5x5') {
+    dragObj.position.x = Math.floor(dragObj.position.x / 10) * 10 + 5
+    dragObj.position.z = Math.floor(dragObj.position.z / 10) * 10 + 5
   }
 
   // clear locking
-  for (const a of drag_obj.$lockPoints) {
+  for (const a of dragObj.$lockPoints) {
     if (a.$locked !== null) {
       a.$locked.$locked = null
     }
   }
 
-  const lockingCandidates = drag_obj
+  const lockingCandidates = dragObj
     .$lockPoints
     .filter(x => x.$preparedToLock !== null)
 
@@ -229,40 +229,40 @@ function handleDrop(world) {
       .sort((a, b) => getHeight(a.$preparedToLock) - getHeight(b.$preparedToLock))
       .pop()
 
-    const almost_parent = lockthis.$preparedToLock.parent
+    const almostParent = lockthis.$preparedToLock.parent
 
     // avoid circular ancestorness
     let autoAncestor = false
-    almost_parent.traverseAncestors((x) => {
-      if (x === drag_obj) autoAncestor = true
+    almostParent.traverseAncestors((x) => {
+      if (x === dragObj) autoAncestor = true
     })
 
     if (!autoAncestor) {
-      drag_obj.$lockPoints.forEach((x) => { x.$locked = null })
-      drag_obj.$lockPoints
+      dragObj.$lockPoints.forEach((x) => { x.$locked = null })
+      dragObj.$lockPoints
         .filter(x => x.$preparedToLock !== null
                    && getHeight(lockthis) - getHeight(x) < 2)
         .forEach((x) => {
           x.$locked = x.$preparedToLock
         })
 
-      drag_obj.position.copy(
-        drag_obj
+      dragObj.position.copy(
+        dragObj
           .getWorldPosition(new THREE.Vector3())
           .sub(lockthis.getWorldPosition(new THREE.Vector3()))
           .add(lockthis.$locked.getWorldPosition(new THREE.Vector3()))
       )
 
-      utils.attach(drag_obj, almost_parent)
+      utils.attach(dragObj, almostParent)
     }
   }
 
-  world.drag_obj = null
+  world.dragObj = null
 
-  world.do_safety_check()
+  world.safetyCheck()
 }
 
-const do_safety_check = (world) => {
+const safetyCheck = (world) => {
   const { blocks } = world
 
   const lps = blocks.map(x => x.$lockPoints).reduce((a, b) => a.concat(b), [])
@@ -297,19 +297,22 @@ const do_safety_check = (world) => {
 
   const gaps = downs.filter(x => x.$tmp_gap && !x.$tmp_lock)
 
-  /* eslint-disable global-require */
-  const _do_safety_check_report = (_gaps) => {
-    if (_gaps.length === 0) {
-      document.querySelector('#button-checkmark img').src = require('./images/checkmark.svg')
-      document.querySelector('#safety-warn').style.display = 'none'
-    } else {
-      document.querySelector('#button-checkmark img').src = require('./images/warn.svg')
-      document.querySelector('#safety-warn').style.display = ''
-    }
-  }
-  /* eslint-enable */
-  _do_safety_check_report(gaps)
+  renderWarning(gaps)
 }
+
+/* eslint-disable global-require */
+
+const renderWarning = (gaps) => {
+  if (gaps.length === 0) {
+    document.querySelector('#button-checkmark img').src = require('./images/checkmark.svg')
+    document.querySelector('#safety-warn').style.display = 'none'
+  } else {
+    document.querySelector('#button-checkmark img').src = require('./images/warn.svg')
+    document.querySelector('#safety-warn').style.display = ''
+  }
+}
+
+/* eslint-enable */
 
 const saveSnapshot = (world) => {
   const { renderer } = world
@@ -393,12 +396,12 @@ export function createWorld() {
   const world = {
     mouse: new THREE.Vector2(),
     activeObj: null,
-    drag_obj: null,
+    dragObj: null,
     dragPointStart: null,
     dragObjPositionStart: null,
     handleDragStart: () => handleDragStart(world),
     handleDrop: () => handleDrop(world),
-    do_safety_check: () => do_safety_check(world),
+    safetyCheck: () => safetyCheck(world),
     getIntersected: () => getIntersected(world),
     saveSnapshot: () => saveSnapshot(world),
     removeObject: obj => removeObject(world, obj),

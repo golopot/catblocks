@@ -30,7 +30,7 @@ const showUnsupported = () => {
 }
 
 
-const do_updateSummary = () => {
+const updateSummary = () => {
   const sum = document.querySelector('#summary')
   const count = window.blocks.reduce((a, x) => {
     if (a[x.name]) a[x.name] += 1
@@ -132,7 +132,7 @@ export function initUI(world) {
       dq('#footer').style.visibility = 'visible'
 
 
-      do_updateSummary()
+      updateSummary()
     }
 
     if (e.target.id === 'button-goback') {

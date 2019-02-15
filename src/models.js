@@ -2,100 +2,99 @@ import { OBJLoader } from 'three/examples/js/loaders/OBJLoader'
 import * as THREE from 'three'
 import 'three/examples/js/utils/BufferGeometryUtils'
 
-const createLockpoints = points => points.map((a) => {
-  const geometry = new THREE.IcosahedronGeometry(1.0)
-  const point = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial())
-  point.position.fromArray(a.position)
-  point.material.setValues({
-    color: 0xff0000,
-    emissiveIntensity: 0.2,
-  })
-
-  // dollar sign means user-defined properties
-  return Object.assign(point, {
-    $direction: a.direction,
-    $projPositionCache: new THREE.Vector3(),
-    $locked: null,
-    $preparedToLock: null,
-    visible: false,
-    // visible: true,
-  })
-})
-
-
-const fl = Math.floor
-
-
 const manager = new THREE.LoadingManager()
 const objLoader = new OBJLoader(manager)
 const textureLoader = new THREE.TextureLoader(manager)
 
-
-function Model(name, geometry_path, texture_path) {
-  this.name = name
-  this.geometry_path = geometry_path
-  this.texture_path = texture_path
-  this.geometry = null
-  this.texture = null
-  this.lockPoints = lockPoints[name]
-}
-
-Model.prototype.createBlock = function createBlock() {
-  const mesh = new THREE.Mesh(this.geometry, new THREE.MeshPhongMaterial())
-
-  mesh.material.setValues(
-    {
-      color: 0x51D0FF,
-      emissiveIntensity: 0,
-      // specular: 0x2F4AC5,
-      shininess: 0,
-      // transparent: true,
-      opacity: 1.0,
-    }
-  )
-
-  if (this.texture !== null) {
-    mesh.material.setValues({ map: this.texture, color: 0xffffff })
+class Model {
+  constructor(name, geometry_path, texture_path) {
+    this.name = name
+    this.geometry_path = geometry_path
+    this.texture_path = texture_path
+    this.geometry = null
+    this.texture = null
+    this.lockPoints = lockPoints[name]
   }
 
-  mesh.name = this.name
+  createBlock() {
+    const mesh = new THREE.Mesh(this.geometry, new THREE.MeshPhongMaterial())
 
-  mesh.$lockPoints = createLockpoints(this.lockPoints)
+    mesh.material.setValues(
+      {
+        color: 0x51D0FF,
+        emissiveIntensity: 0,
+        // specular: 0x2F4AC5,
+        shininess: 0,
+        // transparent: true,
+        opacity: 1.0,
+      }
+    )
 
-  mesh.$lockPoints.forEach((x) => {
-    mesh.add(x)
-  })
+    if (this.texture !== null) {
+      mesh.material.setValues({ map: this.texture, color: 0xffffff })
+    }
 
-  mesh.$isBlock = true
+    mesh.name = this.name
 
-  return mesh
-}
+    mesh.$lockPoints = this.createLockpoints()
 
-
-Model.prototype.loadGeometry = function loadGeometry() {
-  return Promise.resolve()
-    .then(() => fetch(this.geometry_path))
-    .then(r => r.text())
-    .then((text) => {
-      const obj = objLoader.parse(text)
-      this.geometry = THREE.BufferGeometryUtils
-        .mergeBufferGeometries(obj.children.map(x => x.geometry))
-        .scale(10, 10, 10)
+    mesh.$lockPoints.forEach((x) => {
+      mesh.add(x)
     })
-}
 
+    mesh.$isBlock = true
 
-Model.prototype.loadTexture = function loadTexture() {
-  return Promise.resolve()
-    .then(() => fetch(this.texture_path))
-    .then(r => r.blob())
-    .then((blob) => {
-      const url = URL.createObjectURL(blob)
-      textureLoader.load(url, (texture) => {
-        this.texture = texture
+    return mesh
+  }
+
+  createLockpoints() {
+    return this.lockPoints.map((a) => {
+      const geometry = new THREE.IcosahedronGeometry(1.0)
+      const point = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial())
+      point.position.fromArray(a.position)
+      point.material.setValues({
+        color: 0xff0000,
+        emissiveIntensity: 0.2,
+      })
+
+      // dollar sign means user-defined properties
+      return Object.assign(point, {
+        $direction: a.direction,
+        $projPositionCache: new THREE.Vector3(),
+        $locked: null,
+        $preparedToLock: null,
+        visible: false,
       })
     })
+  }
+
+  loadGeometry() {
+    return Promise.resolve()
+      .then(() => fetch(this.geometry_path))
+      .then(r => r.text())
+      .then((text) => {
+        const obj = objLoader.parse(text)
+        this.geometry = THREE.BufferGeometryUtils
+          .mergeBufferGeometries(obj.children.map(x => x.geometry))
+          .scale(10, 10, 10)
+      })
+  }
+
+  loadTexture() {
+    return Promise.resolve()
+      .then(() => fetch(this.texture_path))
+      .then(r => r.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob)
+        textureLoader.load(url, (texture) => {
+          this.texture = texture
+        })
+      })
+  }
 }
+
+
+const fl = Math.floor
 
 const lockPoints = {
   box3x3: []
@@ -206,11 +205,6 @@ const lockPoints = {
         ],
 }
 
-const loadModels = () => Promise.all([
-  ...models.map(m => m.loadGeometry()),
-  ...models.map(m => m.loadTexture()),
-])
-
 /* eslint-disable global-require */
 const models = [
   ['cylinder', require('./assets/cylinder.obj'), require('./assets/wood.jpg')],
@@ -231,12 +225,22 @@ const models = [
 
 
 models.get = (name) => {
-  for (let i = 0; i < models.length; i += 1) if (models[i].name === name) return models[i]
-  console.error('not found')
-  return null
+  for (const x of models) {
+    if (x.name === name) {
+      return x
+    }
+  }
+  throw Error('Model is not found')
 }
 
+const loadModels = () => Promise.all([
+  ...models.map(m => m.loadGeometry()),
+  ...models.map(m => m.loadTexture()),
+])
+
+
 window.models = models
+
 export {
   models,
   loadModels,

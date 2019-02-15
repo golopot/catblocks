@@ -7,7 +7,7 @@ module.exports = {
     main: './src/main.js',
   },
   output: {
-    filename: '[name].[hash].js',
+    filename: '[name].[hash:8].js',
     path: `${__dirname}/dist`,
   },
   module: {
@@ -25,12 +25,23 @@ module.exports = {
         },
       },
       {
-        test: /\.(png|svg|jpg|obj)$/,
+        test: /\.(png|svg|jpg)$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: 'assets/[hash].[ext]',
+              name: 'assets/[md5:hash:hex:8].[ext]',
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(obj)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'assets/[md5:hash:hex:8].obj.txt',
             },
           },
         ],

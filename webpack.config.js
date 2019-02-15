@@ -1,4 +1,5 @@
 const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   mode: 'development',
@@ -6,7 +7,7 @@ module.exports = {
     main: './src/main.js',
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[hash].js',
     path: `${__dirname}/dist`,
   },
   module: {
@@ -23,10 +24,24 @@ module.exports = {
           ],
         },
       },
+      {
+        test: /\.(png|svg|jpg|obj)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'assets/[hash].[ext]',
+            },
+          },
+        ],
+      },
     ],
   },
   devtool: 'source-map',
   plugins: [
     new ThreeWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+    }),
   ],
 }

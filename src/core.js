@@ -297,17 +297,17 @@ const do_safety_check = (world) => {
 
   const gaps = downs.filter(x => x.$tmp_gap && !x.$tmp_lock)
 
-
+  /* eslint-disable global-require */
   const _do_safety_check_report = (_gaps) => {
     if (_gaps.length === 0) {
-      document.querySelector('#button-checkmark img').src = 'images/checkmark.svg'
+      document.querySelector('#button-checkmark img').src = require('./images/checkmark.svg')
       document.querySelector('#safety-warn').style.display = 'none'
     } else {
-      document.querySelector('#button-checkmark img').src = 'images/warn.svg'
+      document.querySelector('#button-checkmark img').src = require('./images/warn.svg')
       document.querySelector('#safety-warn').style.display = ''
     }
   }
-
+  /* eslint-enable */
   _do_safety_check_report(gaps)
 }
 

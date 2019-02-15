@@ -1,5 +1,6 @@
-yarn pack-prod &&
-cd dist-prod &&
+yarn &&
+yarn build &&
+cd dist &&
 git init &&
 git add --all &&
 git commit -m "Automated commit" &&

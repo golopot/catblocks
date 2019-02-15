@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/js/controls/OrbitControls'
 import { initUI } from './uiThings'
 import initCanvasListeners from './canvasEvs'
@@ -24,11 +23,6 @@ function init() {
   initCanvasListeners(renderer.domElement, world)
   initUI(world)
   const controls = new OrbitControls(camera, renderer.domElement)
-  controls.mouseButtons = {
-    ORBIT: THREE.MOUSE.LEFT,
-    ZOOM: THREE.MOUSE.MIDDLE,
-    PAN: null,
-  }
   controls.enablePan = false
   controls.target = cameraTarget
   controls.update()

@@ -1,8 +1,6 @@
 import { OBJLoader } from 'three/examples/js/loaders/OBJLoader'
-
 import * as THREE from 'three'
-import JSZip from 'jszip'
-import BufferGeometryUtils from './vendor/BufferGeometryUtils'
+import 'three/examples/js/utils/BufferGeometryUtils'
 
 const createLockpoints = points => points.map((a) => {
   const geometry = new THREE.IcosahedronGeometry(1.0)
@@ -74,31 +72,29 @@ Model.prototype.createBlock = function createBlock() {
 }
 
 
-Model.prototype.loadGeometry = function loadGeometry(zip) {
+Model.prototype.loadGeometry = function loadGeometry() {
   return Promise.resolve()
-    .then(() => zip
-      .file(this.geometry_path)
-      .async('text')
-      .then((blob) => {
-        const obj = objLoader.parse(blob)
-        this.geometry = BufferGeometryUtils
-          .mergeBufferGeometries(obj.children.map(x => x.geometry))
-          .scale(10, 10, 10)
-      }))
+    .then(() => fetch(this.geometry_path))
+    .then(r => r.text())
+    .then((text) => {
+      const obj = objLoader.parse(text)
+      this.geometry = THREE.BufferGeometryUtils
+        .mergeBufferGeometries(obj.children.map(x => x.geometry))
+        .scale(10, 10, 10)
+    })
 }
 
 
-Model.prototype.loadTexture = function loadTexture(zip) {
+Model.prototype.loadTexture = function loadTexture() {
   return Promise.resolve()
-    .then(() => zip
-      .file(this.texture_path)
-      .async('blob')
-      .then((blob) => {
-        const url = URL.createObjectURL(blob)
-        return textureLoader.load(url, (texture) => {
-          this.texture = texture
-        })
-      }))
+    .then(() => fetch(this.texture_path))
+    .then(r => r.blob())
+    .then((blob) => {
+      const url = URL.createObjectURL(blob)
+      textureLoader.load(url, (texture) => {
+        this.texture = texture
+      })
+    })
 }
 
 const lockPoints = {
@@ -210,30 +206,28 @@ const lockPoints = {
         ],
 }
 
-const loadModels = () => fetch('/assets/assets.zip')
-  .then(r => r.blob())
-  .then(r => new JSZip().loadAsync(r))
-  .then(zip => Promise.all([
-    ...models.map(x => x.loadGeometry(zip)),
-    ...models.map(x => x.loadTexture(zip)),
-  ]))
-  .catch(console.error)
+const loadModels = () => Promise.all([
+  ...models.map(m => m.loadGeometry()),
+  ...models.map(m => m.loadTexture()),
+])
 
+/* eslint-disable global-require */
 const models = [
-  ['cylinder', 'cylinder.obj', 'wood.jpg'],
-  ['cylinder_wired', 'cylinder_wired.obj', 'hemp.jpg'],
-  ['cylinder_half', 'cylinder_half.obj', 'wood.jpg'],
-  ['disk', 'disk.obj', 'wood.jpg'],
-  ['castle', 'castle.obj', 'wood.jpg'],
-  ['box3x3', 'box3x3.obj', 'wood.jpg'],
-  ['box4x3', 'box4x3.obj', 'wood.jpg'],
-  ['foodtable', 'foodtable.obj', 'wood.jpg'],
-  ['bed', 'bed.obj', 'wood.jpg'],
-  ['plate5x5', 'plate5x5.obj', 'wood.jpg'],
-  ['plate5x3', 'plate5x3.obj', 'wood.jpg'],
-  ['plate3x3', 'plate3x3.obj', 'wood.jpg'],
+  ['cylinder', require('./assets/cylinder.obj'), require('./assets/wood.jpg')],
+  ['cylinder_wired', require('./assets/cylinder_wired.obj'), require('./assets/hemp.jpg')],
+  ['cylinder_half', require('./assets/cylinder_half.obj'), require('./assets/wood.jpg')],
+  ['disk', require('./assets/disk.obj'), require('./assets/wood.jpg')],
+  ['castle', require('./assets/castle.obj'), require('./assets/wood.jpg')],
+  ['box3x3', require('./assets/box3x3.obj'), require('./assets/wood.jpg')],
+  ['box4x3', require('./assets/box4x3.obj'), require('./assets/wood.jpg')],
+  ['foodtable', require('./assets/foodtable.obj'), require('./assets/wood.jpg')],
+  ['bed', require('./assets/bed.obj'), require('./assets/wood.jpg')],
+  ['plate5x5', require('./assets/plate5x5.obj'), require('./assets/wood.jpg')],
+  ['plate5x3', require('./assets/plate5x3.obj'), require('./assets/wood.jpg')],
+  ['plate3x3', require('./assets/plate3x3.obj'), require('./assets/rope.jpg')],
 ]
   .map(x => new Model(x[0], x[1], x[2]))
+/* eslint-enable */
 
 
 models.get = (name) => {

@@ -1,31 +1,12 @@
-const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin')
+const merge = require('webpack-merge')
+const TerserPlugin = require('terser-webpack-plugin')
+const baseConfig = require('./webpack.config.js')
 
-module.exports = {
+
+module.exports = merge(baseConfig, {
   mode: 'production',
-  entry: {
-    main: './src/main.js',
+  optimization: {
+    minimizer: [new TerserPlugin()],
   },
-  output: {
-    filename: '[name].bundle.js',
-    path: `${__dirname}/dist`,
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['env'],
-          plugins: [
-            ['transform-class-properties'],
-            ['transform-object-rest-spread'],
-          ],
-        },
-      },
-    ],
-  },
-  plugins: [
-    new ThreeWebpackPlugin(),
-  ],
-}
+  devtool: 'source-map',
+})

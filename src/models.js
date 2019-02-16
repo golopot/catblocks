@@ -176,7 +176,7 @@ const models = [
   ['bed', require('./assets/bed.obj'), require('./assets/wood.jpg')],
   ['plate5x5', require('./assets/plate5x5.obj'), require('./assets/wood.jpg')],
   ['plate5x3', require('./assets/plate5x3.obj'), require('./assets/wood.jpg')],
-  ['plate3x3', require('./assets/plate3x3.obj'), require('./assets/rope.jpg')],
+  ['plate3x3', require('./assets/plate3x3.obj'), require('./assets/wood.jpg')],
 ]
   .map(x => new Model(x[0], x[1], x[2]))
 /* eslint-enable */

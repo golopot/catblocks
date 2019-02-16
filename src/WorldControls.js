@@ -1,4 +1,4 @@
-import { reveal_hide_SelectedModeUI } from './uiThings'
+import { reveal_hide_SelectedModeUI } from './ui'
 
 export function WorldControls(world) {
   const { mouse, camera, renderer } = world

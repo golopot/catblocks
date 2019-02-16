@@ -1,6 +1,6 @@
-import { initUI } from './uiThings'
+import { initUI } from './ui'
 import Controls from './Controls'
-import { createWorld } from './core'
+import { createWorld } from './world'
 import { addGrid, addDefaultBlocks, addShowcase } from './sceneSetup'
 import { loadModels } from './models'
 

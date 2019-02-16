@@ -48,10 +48,10 @@ class Model {
   }
 
   createLockpoints() {
-    return this.lockPoints.map((a) => {
+    return this.lockPoints.map(({ position, direction }) => {
       const geometry = new THREE.IcosahedronGeometry(1.0)
       const point = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial())
-      point.position.fromArray(a.position)
+      point.position.fromArray(position)
       point.material.setValues({
         color: 0xff0000,
         emissiveIntensity: 0.2,
@@ -59,7 +59,7 @@ class Model {
 
       // dollar sign means user-defined properties
       return Object.assign(point, {
-        $direction: a.direction,
+        $direction: direction,
         $projPositionCache: new THREE.Vector3(),
         $locked: null,
         $preparedToLock: null,
@@ -96,113 +96,71 @@ class Model {
 
 const fl = Math.floor
 
+const Grid = (numX, numZ, scale, center, direction) => Array.from({ length: numX * numZ })
+  .map((_, i) => {
+    const [cx, cy, cz] = center
+
+    return {
+      direction,
+      position: [
+        ((i % numX) - (numX - 1) / 2 + cx) * scale,
+        cy * scale,
+        (fl(i / numX) - (numZ - 1) / 2 + cz) * scale,
+      ],
+    }
+  })
+
 const lockPoints = {
-  box3x3: []
-    .concat(
-      Array.from({ length: 9 })
-        .map((x, i) => [((i % 3) - 1) * 10, 30, (fl(i / 3) - 1) * 10])
-        .map(x => ({ direction: 'up', position: x }))
-    )
-    .concat(
-      Array.from({ length: 9 })
-        .map((x, i) => [((i % 3) - 1) * 10, 0, (fl(i / 3) - 1) * 10])
-        .map(x => ({ direction: 'down', position: x }))
-    ),
-
-  plate3x3: []
-    .concat(
-      Array.from({ length: 9 })
-        .map((x, i) => [((i % 3) - 1) * 10, 1.8, (fl(i / 3) - 1) * 10])
-        .map(x => ({ direction: 'up', position: x }))
-    )
-    .concat(
-      Array.from({ length: 9 })
-        .map((x, i) => [((i % 3) - 1) * 10, 0, (fl(i / 3) - 1) * 10])
-        .map(x => ({ direction: 'down', position: x }))
-    ),
-  plate5x3: []
-    .concat(
-      Array.from({ length: 15 })
-        .map((x, i) => [((i % 5) - 2) * 10, 1.8, (fl(i / 5) - 1) * 10])
-        .map(x => ({ direction: 'up', position: x }))
-    )
-    .concat(
-      Array.from({ length: 15 })
-        .map((x, i) => [((i % 5) - 2) * 10, 0, (fl(i / 5) - 1) * 10])
-        .map(x => ({ direction: 'down', position: x }))
-    ),
-  plate5x5: []
-    .concat(
-      Array.from({ length: 25 })
-        .map((x, i) => [((i % 5) - 2) * 10, 3.6, (fl(i / 5) - 2) * 10])
-        .map(x => ({ direction: 'up', position: x }))
-    )
-    .concat(
-      Array.from({ length: 25 })
-        .map((x, i) => [((i % 5) - 2) * 10, 0.0, (fl(i / 5) - 2) * 10])
-        .map(x => ({ direction: 'down', position: x }))
-    ),
-
-  cylinder:
-        [
-          { direction: 'up', position: [0, 30, 0] },
-          { direction: 'down', position: [0, 0, 0] },
-        ],
-  cylinder_wired:
-        [
-          { direction: 'up', position: [0, 30, 0] },
-          { direction: 'down', position: [0, 0, 0] },
-        ],
-  cylinder_half:
-        [
-          { direction: 'up', position: [0, 13.2, 0] },
-          { direction: 'down', position: [0, 0, 0] },
-        ],
-  disk:
-        [
-          { direction: 'up', position: [0, 1.8, 0] },
-          { direction: 'down', position: [0, 0, 0] },
-        ],
-  bed: []
-    .concat(
-      Array.from({ length: 8 })
-        .map((x, i) => [(i % 4) * 10 - 15, 1.8, (fl(i / 4)) * 10 - 5])
-        .map(x => ({ direction: 'up', position: x }))
-    )
-    .concat(
-      Array.from({ length: 8 })
-        .map((x, i) => [(i % 4) * 10 - 15, 0, (fl(i / 4)) * 10 - 5])
-        .map(x => ({ direction: 'down', position: x }))
-    ),
-  box4x3: []
-    .concat(
-      Array.from({ length: 12 })
-        .map((x, i) => [(i % 4) * 10 - 15, 30, (fl(i / 4)) * 10 - 10])
-        .map(x => ({ direction: 'up', position: x }))
-    )
-    .concat(
-      Array.from({ length: 12 })
-        .map((x, i) => [(i % 4) * 10 - 15, 0, (fl(i / 4)) * 10 - 10])
-        .map(x => ({ direction: 'down', position: x }))
-    ),
-  castle: []
-    .concat(
-      Array.from({ length: 12 })
-        .map((x, i) => [(i % 4) * 10 - 15, 30, (fl(i / 4)) * 10 - 10])
-        .map(x => ({ direction: 'up', position: x }))
-    )
-    .concat(
-      Array.from({ length: 12 })
-        .map((x, i) => [(i % 4) * 10 - 15, 0, (fl(i / 4)) * 10 - 10])
-        .map(x => ({ direction: 'down', position: x }))
-    ),
-  foodtable:
-        [
-          { direction: 'down', position: [5, 0, 5] },
-          { direction: 'down', position: [5, 0, -5] },
-          { direction: 'down', position: [-5, 0, 5] },
-          { direction: 'down', position: [-5, 0, -5] },
-        ],
+  box3x3: [
+    ...Grid(3, 3, 10, [0, 3, 0], 'up'),
+    ...Grid(3, 3, 10, [0, 0, 0], 'down'),
+  ],
+  plate3x3: [
+    ...Grid(3, 3, 10, [0, 0.18, 0], 'up'),
+    ...Grid(3, 3, 10, [0, 0, 0], 'down'),
+  ],
+  plate5x3: [
+    ...Grid(5, 3, 10, [0, 0.18, 0], 'up'),
+    ...Grid(5, 3, 10, [0, 0, 0], 'down'),
+  ],
+  plate5x5: [
+    ...Grid(5, 5, 10, [0, 0.36, 0], 'up'),
+    ...Grid(5, 5, 10, [0, 0, 0], 'down'),
+  ],
+  cylinder: [
+    { direction: 'up', position: [0, 30, 0] },
+    { direction: 'down', position: [0, 0, 0] },
+  ],
+  cylinder_wired: [
+    { direction: 'up', position: [0, 30, 0] },
+    { direction: 'down', position: [0, 0, 0] },
+  ],
+  cylinder_half: [
+    { direction: 'up', position: [0, 13.2, 0] },
+    { direction: 'down', position: [0, 0, 0] },
+  ],
+  disk: [
+    { direction: 'up', position: [0, 1.8, 0] },
+    { direction: 'down', position: [0, 0, 0] },
+  ],
+  bed: [
+    ...Grid(4, 2, 10, [0, 0.18, 0], 'up'),
+    ...Grid(4, 2, 10, [0, 0, 0], 'down'),
+  ],
+  box4x3: [
+    ...Grid(4, 3, 10, [0, 3, 0], 'up'),
+    ...Grid(4, 3, 10, [0, 0, 0], 'down'),
+  ],
+  castle: [
+    ...Grid(4, 3, 10, [0, 3, 0], 'up'),
+    ...Grid(4, 3, 10, [0, 0, 0], 'down'),
+  ],
+  foodtable: [
+    { direction: 'down', position: [5, 0, 5] },
+    { direction: 'down', position: [5, 0, -5] },
+    { direction: 'down', position: [-5, 0, 5] },
+    { direction: 'down', position: [-5, 0, -5] },
+  ],
 }
 
 /* eslint-disable global-require */

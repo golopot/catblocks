@@ -1,6 +1,5 @@
-import { OrbitControls } from 'three/examples/js/controls/OrbitControls'
 import { initUI } from './uiThings'
-import initCanvasListeners from './canvasEvs'
+import Controls from './Controls'
 import { createWorld } from './core'
 import { addGrid, addDefaultBlocks, addShowcase } from './sceneSetup'
 import { loadModels } from './models'
@@ -8,35 +7,16 @@ import { loadModels } from './models'
 
 function init() {
   const world = createWorld()
-  const {
-    camera,
-    cameraTarget,
-    renderer,
-    animate,
-  } = world
 
+  const { renderer, animate } = world
 
   document
     .querySelector('#three-container')
     .appendChild(renderer.domElement)
 
-  initCanvasListeners(renderer.domElement, world)
   initUI(world)
-  const controls = new OrbitControls(camera, renderer.domElement)
-  controls.enablePan = false
-  controls.target = cameraTarget
-  controls.update()
 
-  world.orbitControls = controls
-
-
-  function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-  }
-  onWindowResize()
-  window.addEventListener('resize', onWindowResize)
+  world.controls = Controls(world)
 
   animate()
   addGrid(world)

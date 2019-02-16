@@ -36,6 +36,7 @@ module.exports = {
       'LabeledStatement',
       'WithStatement',
     ],
+    'import/prefer-default-export': 0,
     camelcase: 0,
   },
 }

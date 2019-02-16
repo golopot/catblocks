@@ -414,7 +414,7 @@ export function createWorld() {
     cameraTarget,
     scene,
     scene2,
-    orbitControls: null,
+    controls: null,
     renderer,
     animate,
   }
@@ -424,5 +424,3 @@ export function createWorld() {
   window.world = world
   return world
 }
-
-export const dummy = 5

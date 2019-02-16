@@ -1,10 +1,8 @@
 import { reveal_hide_SelectedModeUI } from './uiThings'
 
-export default function initCanvasListeners(container, world) {
-  const {
-    mouse,
-    camera,
-  } = world
+export function WorldControls(world) {
+  const { mouse, camera, renderer } = world
+  const { domElement } = world.renderer
 
   function onKeyDown(event) {
     const { activeObj } = world
@@ -18,13 +16,13 @@ export default function initCanvasListeners(container, world) {
     if (event.key === 'ArrowUp') {
       world.cameraTarget.y += 20
       camera.lookAt(world.cameraTarget)
-      world.orbitControls.target = world.cameraTarget
+      world.controls.orbitControls.target = world.cameraTarget
     }
 
     if (event.key === 'ArrowDown') {
       world.cameraTarget.y -= 20
       camera.lookAt(world.cameraTarget)
-      world.orbitControls.target = world.cameraTarget
+      world.controls.orbitControls.target = world.cameraTarget
     }
   }
 
@@ -65,7 +63,6 @@ export default function initCanvasListeners(container, world) {
     }
   }
 
-
   function onTouchStart(event) {
     event.preventDefault()
 
@@ -98,16 +95,46 @@ export default function initCanvasListeners(container, world) {
     mouse.y = -event.touches[0].clientY / event.target.clientHeight * 2 + 1
   }
 
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+  }
 
-  container.addEventListener('mousemove', onMouseMove, true)
-  container.addEventListener('mousedown', onMouseDown, true)
-  container.addEventListener('mouseup', onMouseUp, true)
-  container.addEventListener('mouseout', onMouseUp, true)
+  function init() {
+    domElement.addEventListener('mousemove', onMouseMove, true)
+    domElement.addEventListener('mousedown', onMouseDown, true)
+    domElement.addEventListener('mouseup', onMouseUp, true)
+    domElement.addEventListener('mouseout', onMouseUp, true)
 
-  container.addEventListener('touchmove', onTouchMove, true)
-  container.addEventListener('touchstart', onTouchStart, true)
-  container.addEventListener('touchend', onTouchEnd, true)
-  container.addEventListener('touchcancel', onTouchEnd, true)
+    domElement.addEventListener('touchmove', onTouchMove, true)
+    domElement.addEventListener('touchstart', onTouchStart, true)
+    domElement.addEventListener('touchend', onTouchEnd, true)
+    domElement.addEventListener('touchcancel', onTouchEnd, true)
 
-  document.addEventListener('keydown', onKeyDown, false)
+    document.addEventListener('keydown', onKeyDown, false)
+    window.addEventListener('resize', onWindowResize)
+    onWindowResize()
+  }
+
+  function dispose() {
+    domElement.removeEventListener('mousemove', onMouseMove)
+    domElement.removeEventListener('mousedown', onMouseDown)
+    domElement.removeEventListener('mouseup', onMouseUp)
+    domElement.removeEventListener('mouseout', onMouseUp)
+
+    domElement.removeEventListener('touchmove', onTouchMove)
+    domElement.removeEventListener('touchstart', onTouchStart)
+    domElement.removeEventListener('touchend', onTouchEnd)
+    domElement.removeEventListener('touchcancel', onTouchEnd)
+
+    document.removeEventListener('keydown', onKeyDown)
+    window.removeEventListener('resize', onWindowResize)
+  }
+
+  init()
+
+  return {
+    dispose,
+  }
 }

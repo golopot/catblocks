@@ -8,7 +8,8 @@
     "build": "rm -rf dist && webpack --config webpack.config.prod.js",
     "deploy": "sh deploy.sh",
     "lint": "eslint .",
-    "test": "yarn lint && yarn build"
+    "test": "yarn lint && yarn build",
+    "now-build": "yarn build"
   },
   "author": "",
   "license": "",

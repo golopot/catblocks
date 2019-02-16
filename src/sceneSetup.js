@@ -39,7 +39,7 @@ export const addDefaultBlocks = (world) => {
 
 export const addShowcase = (world) => {
   const spotsize = 60
-  const spot_num_x = 3
+  const spot_num_x = 4
   const spot_num_z = 4
   const scale = 0.3
 

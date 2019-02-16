@@ -8,6 +8,13 @@ const textureLoader = new THREE.TextureLoader(manager)
 
 class Model {
   constructor(name, geometry_path, texture_path) {
+    if (!geometry_path || !texture_path) {
+      throw Error(`Missing required parameter for ${name}`)
+    }
+    if (!lockPoints[name]) {
+      throw Error(`Lockpoints is not defined for ${name}`)
+    }
+
     this.name = name
     this.geometry_path = geometry_path
     this.texture_path = texture_path
@@ -161,6 +168,9 @@ const lockPoints = {
     { direction: 'down', position: [-5, 0, 5] },
     { direction: 'down', position: [-5, 0, -5] },
   ],
+  pyramid: [
+    ...Grid(3, 3, 10, [0, 0, 0], 'down'),
+  ],
 }
 
 /* eslint-disable global-require */
@@ -177,6 +187,7 @@ const models = [
   ['plate5x5', require('./assets/plate5x5.obj'), require('./assets/wood.jpg')],
   ['plate5x3', require('./assets/plate5x3.obj'), require('./assets/wood.jpg')],
   ['plate3x3', require('./assets/plate3x3.obj'), require('./assets/wood.jpg')],
+  ['pyramid', require('./assets/pyramid.obj'), require('./assets/rope.jpg')],
 ]
   .map(x => new Model(x[0], x[1], x[2]))
 /* eslint-enable */

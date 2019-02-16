@@ -7,7 +7,8 @@
     "serve": "mkdir -p dist && cd dist && http-server -c-1 --silent",
     "build": "rm -rf dist && webpack --config webpack.config.prod.js",
     "deploy": "sh deploy.sh",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "yarn lint && yarn build"
   },
   "author": "",
   "license": "",

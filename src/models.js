@@ -90,15 +90,22 @@ class Model {
   }
 
   loadTexture() {
-    return Promise.resolve()
-      .then(() => fetch(this.texture_path))
-      .then(r => r.blob())
-      .then((blob) => {
-        const url = URL.createObjectURL(blob)
-        textureLoader.load(url, (texture) => {
-          this.texture = texture
-        })
-      })
+    return new Promise((resolve, reject) => {
+
+      const onLoad = (texture) => {
+        this.texture = texture
+        resolve()
+      }
+
+      const onProgress = () => {}
+
+      const onError = (err) => {
+        console.error(err)
+        reject(err)
+      }
+
+      textureLoader.load(this.texture_path, onLoad, onProgress, onError)
+    })
   }
 }
 

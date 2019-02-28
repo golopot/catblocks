@@ -52,7 +52,8 @@ const updateSummary = () => {
     disk: 'W903',
     bed: 'W503',
     foodtable: 'J002',
-
+    pyramid: 'W507',
+    castle_longer: 'W509',
   }
   // var dict = {
   //     'castle': '城堡小屋',

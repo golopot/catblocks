@@ -39,7 +39,7 @@ export const addDefaultBlocks = (world) => {
 
 export const addShowcase = (world) => {
   const spotsize = 60
-  const spot_num_x = 3
+  const spot_num_x = 4
   const spot_num_z = 4
   const scale = 0.3
 
@@ -79,6 +79,7 @@ export const addShowcase = (world) => {
   mesh.$spots[1].scale.multiplyScalar(2.5)
   mesh.$spots[2].scale.multiplyScalar(2.5)
   mesh.$spots[3].scale.multiplyScalar(3)
+  mesh.$spots[12].scale.multiplyScalar(0.5)
 
   mesh.$lockPoints = []
   world.scene.add(mesh)

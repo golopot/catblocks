@@ -91,7 +91,6 @@ class Model {
 
   loadTexture() {
     return new Promise((resolve, reject) => {
-
       const onLoad = (texture) => {
         this.texture = texture
         resolve()

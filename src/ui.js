@@ -54,6 +54,7 @@ const updateSummary = () => {
     foodtable: 'J002',
     pyramid: 'W507',
     castle_longer: 'W509',
+    bridge: 'W701',
   }
   // var dict = {
   //     'castle': '城堡小屋',

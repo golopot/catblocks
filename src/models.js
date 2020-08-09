@@ -7,7 +7,7 @@ const objLoader = new OBJLoader(manager)
 const textureLoader = new THREE.TextureLoader(manager)
 
 class Model {
-  constructor(name, geometry_path, texture_path) {
+  constructor(name, geometry_path, texture_path, scale = 1, rotateY = 0) {
     if (!geometry_path || !texture_path) {
       throw Error(`Missing required parameter for ${name}`)
     }
@@ -20,6 +20,8 @@ class Model {
     this.texture_path = texture_path
     this.geometry = null
     this.texture = null
+    this.scale = scale
+    this.rotateY = rotateY
     this.lockPoints = lockPoints[name]
 
     if (!this.lockPoints) throw Error(`lockPoints for ${name} is not defined.`)
@@ -78,6 +80,7 @@ class Model {
   }
 
   loadGeometry() {
+    const scale = 10 * this.scale
     return Promise.resolve()
       .then(() => fetch(this.geometry_path))
       .then(r => r.text())
@@ -85,7 +88,8 @@ class Model {
         const obj = objLoader.parse(text)
         this.geometry = THREE.BufferGeometryUtils
           .mergeBufferGeometries(obj.children.map(x => x.geometry))
-          .scale(10, 10, 10)
+          .scale(scale, scale, scale)
+          .rotateY(this.rotateY)
       })
   }
 
@@ -183,6 +187,16 @@ const lockPoints = {
   pyramid: [
     ...Grid(3, 3, 10, [0, 0, 0], 'down'),
   ],
+  bridge: [
+    { direction: 'down', position: [15, 0, 55] },
+    { direction: 'down', position: [15, 0, -55] },
+    { direction: 'down', position: [-15, 0, 55] },
+    { direction: 'down', position: [-15, 0, -55] },
+    { direction: 'up', position: [15, 0, 55] },
+    { direction: 'up', position: [15, 0, -55] },
+    { direction: 'up', position: [-15, 0, 55] },
+    { direction: 'up', position: [-15, 0, -55] },
+  ],
 }
 
 /* eslint-disable global-require */
@@ -201,8 +215,9 @@ const models = [
   ['plate3x3', require('./assets/plate3x3.obj'), require('./assets/wood.jpg')],
   ['castle_longer', require('./assets/castle-longer.obj'), require('./assets/wood.jpg')],
   ['pyramid', require('./assets/pyramid.obj'), require('./assets/pyramid.jpg')],
+  ['bridge', require('./assets/bridge.obj'), require('./assets/wood.jpg'), 0.1, Math.PI / 2],
 ]
-  .map(x => new Model(x[0], x[1], x[2]))
+  .map(x => new Model(x[0], x[1], x[2], x[3], x[4]))
 /* eslint-enable */
 
 

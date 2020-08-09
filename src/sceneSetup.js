@@ -80,6 +80,8 @@ export const addShowcase = (world) => {
   mesh.$spots[2].scale.multiplyScalar(2.5)
   mesh.$spots[3].scale.multiplyScalar(3)
   mesh.$spots[12].scale.multiplyScalar(0.5)
+  mesh.$spots[14].position.y += 5
+  mesh.$spots[14].scale.multiplyScalar(0.5)
 
   mesh.$lockPoints = []
   world.scene.add(mesh)

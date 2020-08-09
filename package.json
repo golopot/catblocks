@@ -8,14 +8,13 @@
     "build": "rm -rf dist && webpack --config webpack.config.prod.js",
     "deploy": "sh deploy.sh",
     "lint": "eslint .",
-    "test": "yarn lint && yarn build",
-    "now-build": "yarn build"
+    "test": "npm run lint && npm run build"
   },
   "author": "",
   "license": "",
   "private": true,
   "dependencies": {
-    "three": "^0.101.1"
+    "three": "0.101.1"
   },
   "devDependencies": {
     "@wildpeaks/three-webpack-plugin": "^2.0.0",

@@ -197,6 +197,10 @@ const lockPoints = {
     { direction: 'up', position: [-15, 0, 55] },
     { direction: 'up', position: [-15, 0, -55] },
   ],
+  castleplate: [
+    ...Grid(3, 3, 10, [0, 0.36, 0], 'up'),
+    ...Grid(3, 3, 10, [0, 0, 0], 'down'),
+  ],
 }
 
 /* eslint-disable global-require */
@@ -216,6 +220,7 @@ const models = [
   ['castle_longer', require('./assets/castle-longer.obj'), require('./assets/wood.jpg')],
   ['pyramid', require('./assets/pyramid.obj'), require('./assets/pyramid.jpg')],
   ['bridge', require('./assets/bridge.obj'), require('./assets/wood.jpg'), 0.1, Math.PI / 2],
+  ['castleplate', require('./assets/castleplate.obj'), require('./assets/wood.jpg')],
 ]
   .map(x => new Model(x[0], x[1], x[2], x[3], x[4]))
 /* eslint-enable */

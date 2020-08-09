@@ -55,6 +55,7 @@ const updateSummary = () => {
     pyramid: 'W507',
     castle_longer: 'W509',
     bridge: 'W701',
+    castleplate: 'W204',
   }
   // var dict = {
   //     'castle': '城堡小屋',

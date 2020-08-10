@@ -74,7 +74,7 @@ class Model {
         $projPositionCache: new THREE.Vector3(),
         $locked: null,
         $preparedToLock: null,
-        visible: false,
+        visible: false, // set this to true for debugging lockpoints
       })
     })
   }
@@ -188,14 +188,10 @@ const lockPoints = {
     ...Grid(3, 3, 10, [0, 0, 0], 'down'),
   ],
   bridge: [
-    { direction: 'down', position: [15, 0, 55] },
-    { direction: 'down', position: [15, 0, -55] },
-    { direction: 'down', position: [-15, 0, 55] },
-    { direction: 'down', position: [-15, 0, -55] },
-    { direction: 'up', position: [15, 0, 55] },
-    { direction: 'up', position: [15, 0, -55] },
-    { direction: 'up', position: [-15, 0, 55] },
-    { direction: 'up', position: [-15, 0, -55] },
+    ...Grid(4, 1, 10, [0, 0.2, 5.5], 'up'),
+    ...Grid(4, 1, 10, [0, 0, 5.5], 'down'),
+    ...Grid(4, 1, 10, [0, 0.2, -5.5], 'up'),
+    ...Grid(4, 1, 10, [0, 0, -5.5], 'down'),
   ],
   castleplate: [
     ...Grid(3, 3, 10, [0, 0.36, 0], 'up'),

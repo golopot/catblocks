@@ -1,5 +1,5 @@
-yarn &&
-yarn build &&
+npm i &&
+npm run build &&
 cd dist &&
 git init &&
 git add --all &&

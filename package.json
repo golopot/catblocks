@@ -14,7 +14,7 @@
   "license": "",
   "private": true,
   "dependencies": {
-    "three": "0.101.1"
+    "three": "0.125.0"
   },
   "devDependencies": {
     "@wildpeaks/three-webpack-plugin": "^2.0.0",
